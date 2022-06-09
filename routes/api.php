@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,3 +14,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', '\\App\\Http\\Controllers\\Api\\AuthController@login');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+	// to do lists
+	Route::get('to-do-lists', '\\App\\Http\\Controllers\\Api\\ToDoListController@index');
+	Route::post('to-do-lists', '\\App\\Http\\Controllers\\Api\\ToDoListController@create');
+	Route::put('to-do-lists/{id}', '\\App\\Http\\Controllers\\Api\\ToDoListController@update');
+	Route::delete('to-do-lists/{id}', '\\App\\Http\\Controllers\\Api\\ToDoListController@delete');
+});
