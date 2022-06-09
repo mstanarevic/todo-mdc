@@ -2,10 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use HasFactory;
+	protected $fillable = ['title', 'description', 'to_do_list_id', 'deadline'];
+
+	/**
+	 * ToDo list relation
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function toDoList() {
+		return $this->belongsTo(ToDoList::class);
+	}
 }

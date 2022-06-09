@@ -41,4 +41,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+	/**
+	 * ToDo lists relation
+	 * @return \Illuminate\Database\Eloquent\Relations\HasMany
+	 */
+	public function toDoLists() {
+		return $this->hasMany(ToDoList::class);
+	}
 }
