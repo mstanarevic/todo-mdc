@@ -1,86 +1,88 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreToDoListRequest;
 use App\Http\Requests\UpdateToDoListRequest;
 use App\Models\ToDoList;
+use App\Services\ToDoListService;
+use Illuminate\Http\Request;
 
-class ToDoListController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+class ToDoListController extends Controller {
+	private $toDoListService;
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	public function __construct( ToDoListService $toDoListService ) {
+		$this->toDoListService = $toDoListService;
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreToDoListRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreToDoListRequest $request)
-    {
-        //
-    }
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function index( Request $request ) {
+		$response = $this->toDoListService->index( auth()->user()->id,
+			$request->get( 'perPage' ) ?? config('settings.per_page'), $request->get( 'date' ), $request->get( 'title' ) );
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ToDoList  $toDoList
-     * @return \Illuminate\Http\Response
-     */
-    public function show(ToDoList $toDoList)
-    {
-        //
-    }
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ToDoList  $toDoList
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ToDoList $toDoList)
-    {
-        //
-    }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function create( StoreToDoListRequest $request ) {
+		// get data from request
+		$data = $request->only( 'title', 'description', 'date' );
+		// process it
+		$response = $this->toDoListService->create( $data, auth()->user()->id );
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateToDoListRequest  $request
-     * @param  \App\Models\ToDoList  $toDoList
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateToDoListRequest $request, ToDoList $toDoList)
-    {
-        //
-    }
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ToDoList  $toDoList
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ToDoList $toDoList)
-    {
-        //
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param \App\Models\ToDoList $toDoList
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show( ToDoList $toDoList ) {
+
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param \App\Http\Requests\UpdateToDoListRequest $request
+	 * @param int $toDoListId
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function update( UpdateToDoListRequest $request, int $toDoListId ) {
+		// get data from request
+		$data = $request->only( 'title', 'description', 'date' );
+		// process it
+		$response = $this->toDoListService->update( $data, $toDoListId, auth()->user() );
+
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param int $toDoList
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function delete( int $toDoListId ) {
+		$response = $this->toDoListService->delete( $toDoListId, auth()->user() );
+
+		return response()->json( $response, $response['status'] );
+	}
 }
