@@ -26,7 +26,7 @@ class TaskController extends Controller {
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function index( Request $request, int $toDoListId ) {
-		$response = $this->taskService->index( $toDoListId, auth()->user(),
+		$response = $this->taskService->index( $toDoListId,
 			$request->get( 'perPage' ) ?? config( 'settings.per_page' ),
 			$request->get( 'done' ), $request->get( 'deadline' ) );
 
@@ -39,13 +39,14 @@ class TaskController extends Controller {
 	 *
 	 * @param StoreTaskRequest $request
 	 * @param int $toDoListId
+	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function create(StoreTaskRequest $request, int $toDoListId) {
+	public function create( StoreTaskRequest $request, int $toDoListId ) {
 		// get data from request
 		$data = $request->only( 'title', 'description', 'deadline' );
 
-		$response = $this->taskService->create(auth()->user(), $toDoListId, $data);
+		$response = $this->taskService->create( auth()->user(), $toDoListId, $data );
 
 		// return response
 		return response()->json( $response, $response['status'] );
@@ -74,7 +75,7 @@ class TaskController extends Controller {
 		// get data from request
 		$data = $request->only( 'title', 'description', 'deadline' );
 
-		$response = $this->taskService->update($toDoListId, $taskId, $data);
+		$response = $this->taskService->update( $toDoListId, $taskId, $data );
 
 		// return response
 		return response()->json( $response, $response['status'] );
@@ -90,7 +91,8 @@ class TaskController extends Controller {
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function delete( Request $request, int $toDoListId, int $taskId ) {
-		$response = $this->taskService->delete($taskId);
+		$response = $this->taskService->delete( $taskId );
+
 		// return response
 		return response()->json( $response, $response['status'] );
 	}

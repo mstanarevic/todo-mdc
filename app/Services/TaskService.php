@@ -27,7 +27,7 @@ class TaskService extends BaseService {
 	}
 
 
-	public function index( int $toDoListId, User $user, int $perPage, bool $done = null, string $deadline = null ) {
+	public function index( int $toDoListId, int $perPage, bool $done = null, string $deadline = null ) {
 		try {
 
 			$toDoLists = TaskResource::collection( $this->repository->index( $toDoListId, $perPage, $done, $deadline ) );
