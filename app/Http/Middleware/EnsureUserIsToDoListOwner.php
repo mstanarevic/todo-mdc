@@ -7,9 +7,9 @@ use App\Traits\ResponseTrait;
 use Closure;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class EnsureUserIsToDoListOwner {
+
 	use ResponseTrait;
 
 	public $repository;
