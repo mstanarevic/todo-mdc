@@ -63,5 +63,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+	    'to-do-list.owner' => \App\Http\Middleware\EnsureUserIsToDoListOwner::class,
+	    'task-in-to-do-list' => \App\Http\Middleware\EnsureTaskIsInCorrectToDoList::class
     ];
 }
