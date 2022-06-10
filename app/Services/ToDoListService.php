@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Http\Resources\ToDoListResource;
 use App\Interfaces\ToDoListRepositoryInterface;
 use App\Models\User;
-use App\Repositories\ToDoListRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
@@ -29,8 +28,8 @@ class ToDoListService extends BaseService {
 		} catch ( \Exception $e ) {
 			// log error on our server
 			Log::error( $e->getMessage() );
-			// show error message to usre
-			$message = __( 'entity_messages.create_error', [ 'entity' => __( 'entities.todolist' ) ] );
+			// show error message to user
+			$message = __( 'entity_messages.index_error', [ 'entity' => __( 'entities.todolist' ) ] );
 
 			return $this->buildResponse( $message, null, 500 );
 		}
@@ -75,16 +74,6 @@ class ToDoListService extends BaseService {
 	public function update( array $data, int $toDoListId, User $user ) {
 		try {
 
-			// fetch to do list by id
-			$toDoList = $this->repository->findById( $toDoListId );
-
-			// users can update only their to do lists
-			if ( ! $user->can( 'update', $toDoList ) ) {
-				$message = __( 'entity_messages.update_gate_error', [ 'entity' => __( 'entities.todolist' ) ] );
-
-				return $this->buildResponse( $message, null, 403 );
-			}
-
 			$updatedToDoList = ToDoListResource::make( $this->repository->update( $toDoListId, $data ) );
 			$message         = __( 'entity_messages.updated', [ 'entity' => __( 'entities.todolist' ) ] );
 
@@ -113,15 +102,6 @@ class ToDoListService extends BaseService {
 	 */
 	public function delete( int $toDoListId, User $user ) {
 		try {
-
-			$toDoList = $this->repository->findById( $toDoListId );
-
-			// users can update only their to do lists
-			if ( ! $user->can( 'delete', $toDoList ) ) {
-				$message = __( 'entity_messages.delete_gate_error', [ 'entity' => __( 'entities.todolist' ) ] );
-
-				return $this->buildResponse( $message, null, 403 );
-			}
 
 			$this->repository->delete( $toDoListId );
 			$message = __( 'entity_messages.deleted', [ 'entity' => __( 'entities.todolist' ) ] );
