@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\ToDoListResource;
+use App\Interfaces\ToDoListRepositoryInterface;
 use App\Models\User;
 use App\Repositories\ToDoListRepository;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -13,9 +14,9 @@ class ToDoListService extends BaseService {
 	/**
 	 * Constructor
 	 *
-	 * @param ToDoListRepository $repository
+	 * @param ToDoListRepositoryInterface $repository
 	 */
-	public function __construct( ToDoListRepository $repository ) {
+	public function __construct( ToDoListRepositoryInterface $repository ) {
 		$this->repository = $repository;
 	}
 
@@ -34,7 +35,7 @@ class ToDoListService extends BaseService {
 			return $this->buildResponse( $message, null, 500 );
 		}
 	}
-	
+
 	/**
 	 * Create new To Do list
 	 *
