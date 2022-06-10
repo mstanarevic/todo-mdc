@@ -16,9 +16,14 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', '\\App\\Http\\Controllers\\Api\\AuthController@login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-	// to do lists
-	Route::get('to-do-lists', '\\App\\Http\\Controllers\\Api\\ToDoListController@index');
+
 	Route::post('to-do-lists', '\\App\\Http\\Controllers\\Api\\ToDoListController@create');
-	Route::put('to-do-lists/{id}', '\\App\\Http\\Controllers\\Api\\ToDoListController@update');
-	Route::delete('to-do-lists/{id}', '\\App\\Http\\Controllers\\Api\\ToDoListController@delete');
+	Route::get('to-do-lists', '\\App\\Http\\Controllers\\Api\\ToDoListController@index');
+
+	Route::middleware(['to-do-list.owner'])->group(function() {
+		Route::put('to-do-lists/{toDoListId}', '\\App\\Http\\Controllers\\Api\\ToDoListController@update');
+		Route::delete('to-do-lists/{toDoListId}', '\\App\\Http\\Controllers\\Api\\ToDoListController@delete');
+		// tasks
+		Route::get('to-do-lists/{toDoListId}/tasks', '\\App\\Http\\Controllers\\Api\\TaskController@index');
+	});
 });
