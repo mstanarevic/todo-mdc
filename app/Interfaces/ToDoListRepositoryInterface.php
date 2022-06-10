@@ -2,8 +2,6 @@
 
 namespace App\Interfaces;
 
-use App\Models\ToDoList;
-
 interface ToDoListRepositoryInterface
 {
 	public function index(int $userID, int $perPage, string $date = null, string $title = null);

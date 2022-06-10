@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ToDoListResource extends JsonResource
+class TaskResource extends JsonResource
 {
 	/**
 	 * Transform the resource into an array.
@@ -18,7 +18,8 @@ class ToDoListResource extends JsonResource
 			'id' => $this->id,
 			'title' => $this->title,
 			'description' => $this->description,
-			'date' => $this->date
+			'deadline' => $this->deadline,
+			'done' => is_null($this->done) ? false : $this->done
 		];
 	}
 }

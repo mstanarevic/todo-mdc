@@ -11,5 +11,5 @@ return [
 	'not_found' => ':entity not found',
 	'index' => ':entity index',
 	'index_error' => ':entity index error',
-	'task_not_in_todo_list_error' => 'Cannot modify or delete task that does not belong to selected list'
+	'task_not_in_to_do_list_error' => 'Cannot modify or delete task that does not belong to selected list'
 ];

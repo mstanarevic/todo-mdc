@@ -7,7 +7,7 @@ use App\Models\ToDoList;
 class ToDoListRepository extends BaseRepository implements ToDoListRepositoryInterface
 {
 	/**
-	 * ArticlesRepository constructor.
+	 * ToDoListRepository constructor.
 	 * @param ToDoList $toDoList
 	 */
 	public function __construct(ToDoList $toDoList)

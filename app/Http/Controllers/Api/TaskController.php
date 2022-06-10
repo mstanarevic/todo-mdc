@@ -1,86 +1,97 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use App\Services\TaskService;
+use Illuminate\Http\Request;
 
-class TaskController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+class TaskController extends Controller {
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	private $taskService;
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreTaskRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreTaskRequest $request)
-    {
-        //
-    }
+	public function __construct( TaskService $taskService ) {
+		$this->taskService = $taskService;
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Task $task)
-    {
-        //
-    }
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @param Request $request
+	 * @param int $toDoListId
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function index( Request $request, int $toDoListId ) {
+		$response = $this->taskService->index( $toDoListId, auth()->user(),
+			$request->get( 'perPage' ) ?? config( 'settings.per_page' ),
+			$request->get( 'done' ), $request->get( 'deadline' ) );
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\UpdateTaskRequest  $request
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function update(UpdateTaskRequest $request, Task $task)
-    {
-        //
-    }
+	/**
+	 * Create task
+	 *
+	 * @param StoreTaskRequest $request
+	 * @param int $toDoListId
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function create(StoreTaskRequest $request, int $toDoListId) {
+		// get data from request
+		$data = $request->only( 'title', 'description', 'deadline' );
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Task $task)
-    {
-        //
-    }
+		$response = $this->taskService->create(auth()->user(), $toDoListId, $data);
+
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
+
+	/**
+	 * Display the specified resource.
+	 *
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function read( Request $request, int $taskId ) {
+		//
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param \App\Http\Requests\UpdateTaskRequest $request
+	 * @param int $toDoListId
+	 * @param int $taskId
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function update( UpdateTaskRequest $request, int $toDoListId, int $taskId ) {
+		// get data from request
+		$data = $request->only( 'title', 'description', 'deadline' );
+
+		$response = $this->taskService->update($toDoListId, $taskId, $data);
+
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param Request $request
+	 * @param int $toDoListId
+	 * @param int $taskId
+	 *
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function delete( Request $request, int $toDoListId, int $taskId ) {
+		$response = $this->taskService->delete($taskId);
+		// return response
+		return response()->json( $response, $response['status'] );
+	}
 }
