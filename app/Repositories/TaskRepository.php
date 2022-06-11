@@ -85,4 +85,17 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 		$task = $this->model->findOrFail($taskId);
 		return tap($task)->update($taskData);
 	}
+
+	/**
+	 * Update done task property
+	 *
+	 * @param int $taskId
+	 * @param bool $done
+	 *
+	 * @return mixed
+	 */
+	public function updateDone(int $taskId, bool $done) {
+		$task = $this->model->findOrFail($taskId);
+		return tap($task)->update(['done' => $done ]);
+	}
 }

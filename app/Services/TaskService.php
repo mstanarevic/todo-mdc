@@ -28,7 +28,16 @@ class TaskService extends BaseService {
 		$this->toDoListRepository = $toDoListRepository;
 	}
 
-
+	/**
+	 * List all tasks for given to do list
+	 *
+	 * @param int $toDoListId
+	 * @param int $perPage
+	 * @param bool|null $done
+	 * @param string|null $deadline
+	 *
+	 * @return array
+	 */
 	public function index( int $toDoListId, int $perPage, bool $done = null, string $deadline = null ) {
 		try {
 			// convert to server timezone if needed
@@ -39,13 +48,9 @@ class TaskService extends BaseService {
 			$message   = __( 'entity_messages.index', [ 'entity' => __( 'entities.task' ) ] );
 
 			return $this->buildResponse( $message, $toDoLists );
-		} catch ( ModelNotFoundException ) {
-			$message = __( 'entity_messages.not_found', [ 'entity' => __( 'entities.todolist' ) ] );
-
-			return $this->buildResponse( $message, null, 404 );
 		} catch ( \Exception $e ) {
 			// log error on our server
-			Log::error( $e->getMessage() .  $e->getTraceAsString() );
+			Log::error( $e->getMessage() . $e->getTraceAsString() );
 			// show error message to usre
 			$message = __( 'entity_messages.index_error', [ 'entity' => __( 'entities.task' ) ] );
 
@@ -135,5 +140,30 @@ class TaskService extends BaseService {
 			return $this->buildResponse( $message, null, $e->getCode() );
 		}
 	}
+
+	/**
+	 * Toggle done property
+	 *
+	 * @param int $taskId
+	 * @param bool $done
+	 *
+	 * @return array
+	 */
+	public function toggleDone( int $taskId, bool $done ) {
+		try {
+
+			$updatedTask = TaskResource::make($this->repository->updateDone( $taskId, $done ));
+			$message = __( 'entity_messages.updated', [ 'entity' => __( 'entities.task' ) ] );
+
+			return $this->buildResponse( $message, $updatedTask );
+
+		} catch ( \Exception $e ) {
+			Log::error( $e->getMessage() );
+			$message = __( 'entity_messages.update_error', [ 'entity' => __( 'entities.todolist' ) ] );
+
+			return $this->buildResponse( $message, null, $e->getCode() );
+		}
+	}
+
 
 }

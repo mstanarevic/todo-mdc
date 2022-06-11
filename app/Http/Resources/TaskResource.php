@@ -22,7 +22,7 @@ class TaskResource extends JsonResource
 			'title' => $this->title,
 			'description' => $this->description,
 			'deadline' => $this->maybeConvertToTimezone($this->deadline, auth()->user()->timezone),
-			'done' => is_null($this->done) ? false : $this->done
+			'done' => (bool)$this->done
 		];
 	}
 }

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-	protected $fillable = ['title', 'description', 'to_do_list_id', 'deadline'];
+	protected $fillable = ['title', 'description', 'to_do_list_id', 'deadline', 'done'];
 
 	/**
 	 * ToDo list relation
