@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IndexTaskRequest;
 use App\Http\Requests\CreateTaskRequest;
+use App\Http\Requests\ToggleDoneTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
@@ -53,13 +54,19 @@ class TaskController extends Controller {
 	}
 
 	/**
-	 * Display the specified resource.
+	 * Toggle done task property
 	 *
+	 * @param ToggleDoneTaskRequest $request
+	 * @param int $toDoListId
+	 * @param int $taskId
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function read( Request $request, int $taskId ) {
-		//
+	public function toggleDone(ToggleDoneTaskRequest $request, int $toDoListId, int $taskId) {
+		$done = $request->get('done');
+		$response = $this->taskService->toggleDone( $taskId, $done );
+		// return response
+		return response()->json( $response, $response['status'] );
 	}
 
 	/**

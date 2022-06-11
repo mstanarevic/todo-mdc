@@ -1,6 +1,7 @@
 <?php
 
 return [
-    'todolist'   => 'To Do List',
-    'task' => 'Task',
+	'todolist' => 'To Do List',
+	'task'     => 'Task',
+	'user'     => 'User'
 ];
