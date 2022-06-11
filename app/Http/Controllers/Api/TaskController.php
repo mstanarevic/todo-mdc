@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\IndexTaskRequest;
+use App\Http\Requests\CreateTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Task;
 use App\Services\TaskService;
 use Illuminate\Http\Request;
 
@@ -25,7 +25,7 @@ class TaskController extends Controller {
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function index( Request $request, int $toDoListId ) {
+	public function index( IndexTaskRequest $request, int $toDoListId ) {
 		$response = $this->taskService->index( $toDoListId,
 			$request->get( 'perPage' ) ?? config( 'settings.per_page' ),
 			$request->get( 'done' ), $request->get( 'deadline' ) );
@@ -37,16 +37,16 @@ class TaskController extends Controller {
 	/**
 	 * Create task
 	 *
-	 * @param StoreTaskRequest $request
+	 * @param CreateTaskRequest $request
 	 * @param int $toDoListId
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function create( StoreTaskRequest $request, int $toDoListId ) {
+	public function create( CreateTaskRequest $request, int $toDoListId ) {
 		// get data from request
 		$data = $request->only( 'title', 'description', 'deadline' );
 
-		$response = $this->taskService->create( auth()->user(), $toDoListId, $data );
+		$response = $this->taskService->create($toDoListId, $data );
 
 		// return response
 		return response()->json( $response, $response['status'] );

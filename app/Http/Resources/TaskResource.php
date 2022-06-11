@@ -2,10 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Traits\DateTimeConvertTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
 {
+	use DateTimeConvertTrait;
+
 	/**
 	 * Transform the resource into an array.
 	 *
@@ -18,7 +21,7 @@ class TaskResource extends JsonResource
 			'id' => $this->id,
 			'title' => $this->title,
 			'description' => $this->description,
-			'deadline' => $this->deadline,
+			'deadline' => $this->maybeConvertToTimezone($this->deadline, auth()->user()->timezone),
 			'done' => is_null($this->done) ? false : $this->done
 		];
 	}

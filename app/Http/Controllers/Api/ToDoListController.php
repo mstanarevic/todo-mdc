@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreToDoListRequest;
+use App\Http\Requests\IndexToDoRequest;
+use App\Http\Requests\CreateToDoListRequest;
 use App\Http\Requests\UpdateToDoListRequest;
 use App\Models\ToDoList;
 use App\Services\ToDoListService;
-use Illuminate\Http\Request;
 
 class ToDoListController extends Controller {
 
@@ -22,7 +22,7 @@ class ToDoListController extends Controller {
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function index( Request $request ) {
+	public function index( IndexToDoRequest $request ) {
 		$response = $this->toDoListService->index( auth()->user()->id,
 			$request->get( 'perPage' ) ?? config('settings.per_page'), $request->get( 'date' ), $request->get( 'title' ) );
 
@@ -35,7 +35,7 @@ class ToDoListController extends Controller {
 	 *
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function create( StoreToDoListRequest $request ) {
+	public function create( CreateToDoListRequest $request ) {
 		// get data from request
 		$data = $request->only( 'title', 'description', 'date' );
 		// process it

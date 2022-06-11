@@ -5,11 +5,13 @@ namespace App\Services;
 use App\Http\Resources\TaskResource;
 use App\Interfaces\TaskRepositoryInterface;
 use App\Interfaces\ToDoListRepositoryInterface;
-use App\Models\User;
+use App\Traits\DateTimeConvertTrait;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
 class TaskService extends BaseService {
+
+	use DateTimeConvertTrait;
 
 	public $repository;
 
@@ -29,7 +31,10 @@ class TaskService extends BaseService {
 
 	public function index( int $toDoListId, int $perPage, bool $done = null, string $deadline = null ) {
 		try {
-
+			// convert to server timezone if needed
+			if ( ! is_null( $deadline ) ) {
+				$deadline = $this->maybeConvertToServerTimezone( $deadline, auth()->user()->timezone );
+			}
 			$toDoLists = TaskResource::collection( $this->repository->index( $toDoListId, $perPage, $done, $deadline ) );
 			$message   = __( 'entity_messages.index', [ 'entity' => __( 'entities.task' ) ] );
 
@@ -40,9 +45,9 @@ class TaskService extends BaseService {
 			return $this->buildResponse( $message, null, 404 );
 		} catch ( \Exception $e ) {
 			// log error on our server
-			Log::error( $e->getMessage() );
+			Log::error( $e->getMessage() .  $e->getTraceAsString() );
 			// show error message to usre
-			$message = __( 'entity_messages.create_error', [ 'entity' => __( 'entities.task' ) ] );
+			$message = __( 'entity_messages.index_error', [ 'entity' => __( 'entities.task' ) ] );
 
 			return $this->buildResponse( $message, null, 500 );
 		}
@@ -51,13 +56,12 @@ class TaskService extends BaseService {
 	/**
 	 * Create new task
 	 *
-	 * @param User $user
 	 * @param int $toDoListId
 	 * @param array $data
 	 *
 	 * @return array
 	 */
-	public function create( User $user, int $toDoListId, array $data ) {
+	public function create( int $toDoListId, array $data ) {
 		try {
 			// link to to do list
 			$data['to_do_list_id'] = $toDoListId;
@@ -103,7 +107,7 @@ class TaskService extends BaseService {
 			// log error on our server
 			Log::error( $e->getMessage() );
 			// show error message to user
-			$message = __( 'entity_messages.create_error', [ 'entity' => __( 'entities.task' ) ] );
+			$message = __( 'entity_messages.update_error', [ 'entity' => __( 'entities.task' ) ] );
 
 			return $this->buildResponse( $message, null, 500 );
 		}
