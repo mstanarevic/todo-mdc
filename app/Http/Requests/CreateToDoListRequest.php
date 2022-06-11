@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreToDoListRequest extends FormRequest
+class CreateToDoListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,7 +26,7 @@ class StoreToDoListRequest extends FormRequest
         return [
             'title' => ['required', 'max:255'],
 	        'description' => ['required', 'max:65535'],
-	        'date' => ['required', 'date']
+	        'date' => ['required', 'date_format:'.config('settings.date_format')]
         ];
     }
 }

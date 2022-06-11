@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateToDoListRequest extends FormRequest
+class IndexToDoRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,7 @@ class UpdateToDoListRequest extends FormRequest
     public function rules()
     {
         return [
-	        'title' => ['required', 'max:255'],
-	        'description' => ['required', 'max:65535'],
-	        'date' => ['required', 'date_format:'.config('settings.date_format')]
+	        'date' => ['date_format:'.config('settings.date_format')],
         ];
     }
 }

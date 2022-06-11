@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreTaskRequest extends FormRequest
+class IndexTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class StoreTaskRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => ['required', 'max:255'],
-	        'description' => ['required', 'max:65535'],
-	        'deadline' => ['required', 'date_format:Y-m-d H:i']
+	        'deadline' => ['date_format:'.config('settings.datetime_format')],
+	        'done' => ['boolean']
         ];
     }
 }

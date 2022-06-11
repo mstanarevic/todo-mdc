@@ -26,7 +26,7 @@ class UpdateTaskRequest extends FormRequest
         return [
 	        'title' => ['required', 'max:255'],
 	        'description' => ['required', 'max:65535'],
-	        'deadline' => ['required', 'date_format:Y-m-d H:i']
+	        'deadline' => ['required', 'date_format:'.config('settings.datetime_format')]
         ];
     }
 }
