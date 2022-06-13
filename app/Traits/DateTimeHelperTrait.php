@@ -39,4 +39,25 @@ trait DateTimeConvertTrait {
 			return $timestamp;
 		}
 	}
+
+	/**
+	 * Get midnight timezones
+	 *
+	 * @param string $currentTime
+	 *
+	 * @return array
+	 */
+	public function getMidnightTimeZones(string $currentTime) {
+		$midnightZones = [];
+		foreach(timezone_identifiers_list() as $zone) {
+			$dateTime = Carbon::createFromFormat(config('settings.datetime_format'), $currentTime, config('app.timezone'));
+			$dateTime->setTimezone($zone);
+			\Log::debug(print_r($dateTime->hour));
+		    // it's midnight in this zone
+			if($dateTime->hour == 0) {
+				$midnightZones[] = $zone;
+			}
+		}
+		return $midnightZones;
+	}
 }
