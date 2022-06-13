@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post( '/login', '\\App\\Http\\Controllers\\Api\\AuthController@login' );
+Route::post( '/auth/login', '\\App\\Http\\Controllers\\Api\\AuthController@login' );
 
 Route::middleware( [ 'auth:sanctum' ] )->group( function () {
 
