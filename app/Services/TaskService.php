@@ -5,13 +5,14 @@ namespace App\Services;
 use App\Http\Resources\TaskResource;
 use App\Interfaces\TaskRepositoryInterface;
 use App\Interfaces\ToDoListRepositoryInterface;
-use App\Traits\DateTimeConvertTrait;
+use App\Traits\DateTimeHelperTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
 class TaskService extends BaseService {
 
-	use DateTimeConvertTrait;
+	use DateTimeHelperTrait;
 
 	public $repository;
 
@@ -152,7 +153,18 @@ class TaskService extends BaseService {
 	public function toggleDone( int $taskId, bool $done ) {
 		try {
 
-			$updatedTask = TaskResource::make($this->repository->updateDone( $taskId, $done ));
+			$data = [
+				'done' => $done
+			];
+
+			// if done is checked, set current time, otherwise remove any value
+			if($done) {
+				$data['done_at'] = Carbon::now();
+			} else {
+				$data['done_at'] = null;
+			}
+
+			$updatedTask = TaskResource::make($this->repository->update( $taskId, $data ));
 			$message = __( 'entity_messages.updated', [ 'entity' => __( 'entities.task' ) ] );
 
 			return $this->buildResponse( $message, $updatedTask );

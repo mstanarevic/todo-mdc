@@ -3,7 +3,7 @@ namespace App\Traits;
 
 use Carbon\Carbon;
 
-trait DateTimeConvertTrait {
+trait DateTimeHelperTrait {
 
 	/**
 	 * Convert given timestamp to server timezone if needed
@@ -52,7 +52,6 @@ trait DateTimeConvertTrait {
 		foreach(timezone_identifiers_list() as $zone) {
 			$dateTime = Carbon::createFromFormat(config('settings.datetime_format'), $currentTime, config('app.timezone'));
 			$dateTime->setTimezone($zone);
-			\Log::debug(print_r($dateTime->hour));
 		    // it's midnight in this zone
 			if($dateTime->hour == 0) {
 				$midnightZones[] = $zone;

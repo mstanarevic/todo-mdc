@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Interfaces\UserRepositoryInterface;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
 
@@ -41,6 +42,36 @@ class UserService extends BaseService {
 
 			return $this->buildResponse( $message, null, 500 );
 		}
+	}
+
+	/**
+	 * @param array $timezones
+	 *
+	 * @return array
+	 */
+	public function getUsersFinishedTasks(array $timezones) {
+
+		$yesterdayStart = Carbon::now()->subDay()->format('Y-m-d 00:00:00');
+		$yesterdayEnd = Carbon::now()->subDay()->format('Y-m-d 23:59:59');
+
+		$tasks = [];
+		$users = $this->repository->getUsersWithTimezones($timezones);
+		if(!$users->isEmpty()) {
+			$tasks = $this->repository->getFinishedTasksForDay($users->pluck('id')->toArray(), $yesterdayStart, $yesterdayEnd);
+			if(!$tasks->isEmpty()) {
+				$tasks = $tasks->map(function($user) {
+					return [
+						'id' => $user->id,
+						'name' => $user->name,
+						'email' => $user->email,
+						'tasks_count' => $user->toDoLists->sum('tasks_count')
+					];
+				});
+			}
+		}
+
+		return $tasks;
+
 	}
 
 }

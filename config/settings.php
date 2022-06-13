@@ -6,5 +6,6 @@
 return [
 	'per_page' => 10,
 	'datetime_format' => 'Y-m-d H:i:s',
-	'date_format' => 'Y-m-d'
+	'date_format' => 'Y-m-d',
+	'job_batch_size' => 500
 ];

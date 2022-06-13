@@ -2,12 +2,12 @@
 
 namespace App\Http\Resources;
 
-use App\Traits\DateTimeConvertTrait;
+use App\Traits\DateTimeHelperTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
 {
-	use DateTimeConvertTrait;
+	use DateTimeHelperTrait;
 
 	/**
 	 * Transform the resource into an array.

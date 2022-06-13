@@ -1,17 +1,17 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Interfaces\TaskRepositoryInterface;
 use App\Models\Task;
 
-class TaskRepository extends BaseRepository implements TaskRepositoryInterface
-{
+class TaskRepository extends BaseRepository implements TaskRepositoryInterface {
 	/**
 	 * TaskRepository constructor.
+	 *
 	 * @param Task $task
 	 */
-	public function __construct(Task $task)
-	{
+	public function __construct( Task $task ) {
 		$this->model = $task;
 	}
 
@@ -25,18 +25,18 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 	 *
 	 * @return mixed
 	 */
-	public function index(int $toDoListId, int $perPage, bool $done = null, string $deadline = null) {
-		$tasks = $this->model->where('to_do_list_id', $toDoListId);
+	public function index( int $toDoListId, int $perPage, bool $done = null, string $deadline = null ) {
+		$tasks = $this->model->where( 'to_do_list_id', $toDoListId );
 
-		if(!is_null($done)) {
-			$tasks->where('done', $done);
+		if ( ! is_null( $done ) ) {
+			$tasks->where( 'done', $done );
 		}
 
-		if($deadline) {
-			$tasks->where('deadline', '<=', $deadline);
+		if ( $deadline ) {
+			$tasks->where( 'deadline', '<=', $deadline );
 		}
 
-		return $tasks->paginate($perPage);
+		return $tasks->paginate( $perPage );
 	}
 
 	/**
@@ -47,7 +47,7 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 	 * @return mixed
 	 */
 	public function findById( $taskId ) {
-		return $this->model->findOrFail($taskId);
+		return $this->model->findOrFail( $taskId );
 	}
 
 	/**
@@ -58,7 +58,8 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 	 * @return mixed
 	 */
 	public function delete( int $taskId ) {
-		$toDoList = $this->model->findOrFail($taskId);
+		$toDoList = $this->model->findOrFail( $taskId );
+
 		return $toDoList->delete();
 	}
 
@@ -70,7 +71,7 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 	 * @return mixed
 	 */
 	public function create( array $taskData ) {
-		return $this->model->create($taskData);
+		return $this->model->create( $taskData );
 	}
 
 	/**
@@ -82,20 +83,8 @@ class TaskRepository extends BaseRepository implements TaskRepositoryInterface
 	 * @return Task|null
 	 */
 	public function update( int $taskId, array $taskData ) {
-		$task = $this->model->findOrFail($taskId);
-		return tap($task)->update($taskData);
-	}
+		$task = $this->model->findOrFail( $taskId );
 
-	/**
-	 * Update done task property
-	 *
-	 * @param int $taskId
-	 * @param bool $done
-	 *
-	 * @return mixed
-	 */
-	public function updateDone(int $taskId, bool $done) {
-		$task = $this->model->findOrFail($taskId);
-		return tap($task)->update(['done' => $done ]);
+		return tap( $task )->update( $taskData );
 	}
 }

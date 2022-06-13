@@ -12,6 +12,4 @@ interface TaskRepositoryInterface {
 	public function create( array $taskData );
 
 	public function update( int $taskId, array $taskData );
-
-	public function updateDone( int $taskId, bool $done );
 }
